@@ -3,23 +3,47 @@
         <van-nav-bar title="登录"/>
         <van-cell-group>
             <van-field
+            v-model="user.mobile"
               clearable
               placeholder="请输入手机号"
             />
-            <van-field placeholder="请输入密码">
+            <van-field placeholder="请输入密码" v-model="user.code">
                 <van-button slot="button" size="small" class="getCode">获取验证码</van-button>
             </van-field>
         </van-cell-group>
         <div class="btnLogin">
-            <van-button type="info">登录</van-button>
+            <van-button type="info" @click="userLogin">登录</van-button>
         </div>
         <div class="footer">隐私条款</div>
     </div>
 </template>
 
 <script>
+import { login } from '@/api/user.js'
 export default {
-
+  data () {
+    return {
+      user: {
+        mobile: '',
+        code: ''
+      }
+    }
+  },
+  methods: {
+    async userLogin () {
+      this.$toast.loading({
+        duration: 0,
+        forbidClick: true,
+        message: '登录中...'
+      })
+      try {
+        await login(this.user)
+        this.$toast.success('登录成功')
+      } catch (error) {
+        this.$toast.fail('登录失败')
+      }
+    }
+  }
 }
 </script>
 
