@@ -3,10 +3,15 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-const routes = [{
-  path: '/login',
-  component: () => import('@/views/login/index')
-}]
+const routes = [
+  {
+    path: '/',
+    redirect: '/login'
+  },
+  {
+    path: '/login',
+    component: () => import('@/views/login/index')
+  }]
 
 const router = new VueRouter({
   routes

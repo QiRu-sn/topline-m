@@ -8,7 +8,14 @@
               placeholder="请输入手机号"
             />
             <van-field placeholder="请输入密码" v-model="user.code">
-                <van-button slot="button" size="small" class="getCode">获取验证码</van-button>
+              <van-button  v-if="isCountShow" slot="button" size="small" class="getCode">
+                  <van-count-down
+                    :time="1000*60"
+                    format="ss s后重新发送"
+                    @finish='isCountShow=false'
+                  />
+              </van-button>
+              <van-button v-else slot="button" size="small" class="getCode" @click="getmobileCode">获取验证码</van-button>
             </van-field>
         </van-cell-group>
         <div class="btnLogin">
@@ -19,17 +26,19 @@
 </template>
 
 <script>
-import { login } from '@/api/user.js'
+import { login, code } from '@/api/user.js'
 export default {
   data () {
     return {
       user: {
         mobile: '',
         code: ''
-      }
+      },
+      isCountShow: false
     }
   },
   methods: {
+    // 登录功能
     async userLogin () {
       this.$toast.loading({
         duration: 0,
@@ -41,6 +50,27 @@ export default {
         this.$toast.success('登录成功')
       } catch (error) {
         this.$toast.fail('登录失败')
+      }
+    },
+    // 获取验证码功能
+    async getmobileCode () {
+      // 获取手机号码
+      const { mobile } = this.user
+      // 校验手机号码是否正确
+
+      // 发送验证码
+      try {
+        // 显示倒计时
+        this.isCountShow = true
+        // 发送验证码
+        await code(mobile)
+      } catch (error) {
+        this.isCountShow = false
+        // 判断如果失败状态码为429，提示请勿重新发送
+        if (error.response.status === 429) {
+          this.$toast('请勿频繁发送')
+        }
+        this.$toast('发送失败')
       }
     }
   }
