@@ -1,23 +1,27 @@
 <template>
     <div class="loginContainer">
         <van-nav-bar title="登录"/>
-        <van-cell-group>
-            <van-field
-            v-model="user.mobile"
-              clearable
-              placeholder="请输入手机号"
-            />
-            <van-field placeholder="请输入密码" v-model="user.code">
-              <van-button  v-if="isCountShow" slot="button" size="small" class="getCode">
-                  <van-count-down
-                    :time="1000*60"
-                    format="ss s后重新发送"
-                    @finish='isCountShow=false'
-                  />
-              </van-button>
-              <van-button v-else slot="button" size="small" class="getCode" @click="getmobileCode">获取验证码</van-button>
-            </van-field>
-        </van-cell-group>
+        <ValidationObserver ref="myForm">
+            <ValidationProvider name='手机号' rules='required|mobile'>
+                <van-field
+                v-model="user.mobile"
+                  clearable
+                  placeholder="请输入手机号"
+                />
+            </ValidationProvider>
+            <ValidationProvider name='验证码' rules='required|code'>
+                <van-field placeholder="请输入密码" v-model="user.code">
+                  <van-button  v-if="isCountShow" slot="button" size="small" class="getCode">
+                      <van-count-down
+                        :time="1000*60"
+                        format="ss s后重新发送"
+                        @finish='isCountShow=false'
+                      />
+                  </van-button>
+                  <van-button v-else slot="button" size="small" class="getCode" @click="getmobileCode">获取验证码</van-button>
+                </van-field>
+            </ValidationProvider>
+        </ValidationObserver>
         <div class="btnLogin">
             <van-button type="info" @click="userLogin">登录</van-button>
         </div>
@@ -27,6 +31,7 @@
 
 <script>
 import { login, code } from '@/api/user.js'
+import { validate } from 'vee-validate'
 export default {
   data () {
     return {
@@ -40,6 +45,19 @@ export default {
   methods: {
     // 登录功能
     async userLogin () {
+      const success = await this.$refs.myForm.validate()
+      if (!success) {
+        // 这里加定时器的原因是因为获取验证失败的结果有延迟问题，并不是我们的原因
+        setTimeout(() => {
+          const errors = this.$refs.myForm.errors
+          // forEach 无法停止
+          // find 方法会遍历数组，对每个元素执行方法中的条件判定
+          const item = Object.values(errors).find(item => item[0])
+          this.$toast(item[0])
+        }, 100)
+        return
+      }
+
       this.$toast.loading({
         duration: 0,
         forbidClick: true,
@@ -57,7 +75,14 @@ export default {
       // 获取手机号码
       const { mobile } = this.user
       // 校验手机号码是否正确
-
+      const { valid, errors } = await validate(mobile, 'required|mobile', {
+        name: '手机号'
+      })
+      // 如果验证失败，提示错误消息，停止发送验证码
+      if (!valid) {
+        this.$toast(errors[0])
+        return
+      }
       // 发送验证码
       try {
         // 显示倒计时
