@@ -18,7 +18,13 @@
                         @finish='isCountShow=false'
                       />
                   </van-button>
-                  <van-button v-else slot="button" size="small" class="getCode" @click="getmobileCode">获取验证码</van-button>
+                  <van-button v-else
+                    slot="button"
+                    size="small"
+                    class="getCode"
+                    @click="getmobileCode">
+                    获取验证码
+                  </van-button>
                 </van-field>
             </ValidationProvider>
         </ValidationObserver>
@@ -46,6 +52,7 @@ export default {
     // 登录功能
     async userLogin () {
       const success = await this.$refs.myForm.validate()
+
       if (!success) {
         // 这里加定时器的原因是因为获取验证失败的结果有延迟问题，并不是我们的原因
         setTimeout(() => {
@@ -64,7 +71,10 @@ export default {
         message: '登录中...'
       })
       try {
-        await login(this.user)
+        let { data } = await login(this.user)
+        // 登录成功将token存入容器中
+        this.$store.commit('setUser', data.data)
+
         this.$toast.success('登录成功')
       } catch (error) {
         this.$toast.fail('登录失败')
