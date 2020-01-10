@@ -4,26 +4,26 @@
     <div class="user-info-wrap" v-if="$store.state.user">
       <div class="base-info-wrap">
         <div class="avatar-title-wrap">
-          <van-image class="avatar" round fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-          <div class="title">黑马程序员</div>
+          <van-image class="avatar" round fit="cover" :src="user.photo" />
+          <div class="title">{{user.name}}</div>
         </div>
         <van-button round size="mini">编辑资料</van-button>
       </div>
       <van-grid class="data-info" :border="false">
         <van-grid-item>
-          <span class="count">123</span>
+          <span class="count">{{user.art_count}}</span>
           <span class="text">头条</span>
         </van-grid-item>
         <van-grid-item>
-          <span class="count">123</span>
+          <span class="count">{{user.follow_count}}</span>
           <span class="text">关注</span>
         </van-grid-item>
         <van-grid-item>
-          <span class="count">123</span>
+          <span class="count">{{user.fans_count}}</span>
           <span class="text">粉丝</span>
         </van-grid-item>
         <van-grid-item>
-          <span class="count">123</span>
+          <span class="count">{{user.like_count}}</span>
           <span class="text">获赞</span>
         </van-grid-item>
       </van-grid>
@@ -66,7 +66,26 @@
 </template>
 
 <script>
-export default {}
+import { getuserInfo } from '@/api/user'
+export default {
+  data () {
+    return {
+      user: {}
+    }
+  },
+  methods: {
+    async loadUser () {
+      let res = await getuserInfo()
+      this.user = res.data.data
+    }
+  },
+  created () {
+    // 判断用户已经登录即获取用户信息
+    if (this.$store.state.user) {
+      this.loadUser()
+    }
+  }
+}
 </script>
 
 <style lang='less' scoped>
