@@ -30,7 +30,7 @@
     </div>
     <!-- /已登录状态 -->
     <!-- 未登录 -->
-    <div class="noLogin" v-else>
+    <div class="noLogin" v-else @click="$router.push('/login')">
       <div class="avator"></div>
       <div class="clickLogin">
         <span>点击登录</span>
@@ -60,6 +60,7 @@
         style="text-align: center;"
         title="退出登录"
         clickable
+        @click='logOut'
       />
     </van-cell-group>
   </div>
@@ -74,9 +75,21 @@ export default {
     }
   },
   methods: {
+    // 加载用户信息
     async loadUser () {
       let res = await getuserInfo()
       this.user = res.data.data
+    },
+    // 退出功能
+    logOut () {
+      this.$dialog.confirm({
+        title: '退出确认',
+        message: '退出当前头条账号，将不能同步收藏，发布评论和云端分享等'
+      }).then(() => {
+        this.$store.commit('setUser', null)
+      }).catch(() => {
+        this.$toast('已取消')
+      })
     }
   },
   created () {
