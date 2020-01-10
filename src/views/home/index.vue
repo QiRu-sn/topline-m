@@ -5,21 +5,30 @@
     <!-- /导航标题栏 -->
     <!-- 频道列表 -->
     <van-tabs v-model="active">
-      <van-tab title="标签 1">内容 1</van-tab>
-      <van-tab title="标签 2">内容 2</van-tab>
-      <van-tab title="标签 3">内容 3</van-tab>
-      <van-tab title="标签 4">内容 4</van-tab>
+      <van-tab :title="item.name" v-for="item in channels" :key="item.id"></van-tab>
     </van-tabs>
     <!-- /频道列表 -->
+
   </div>
 </template>
 
 <script>
+import { getChannels } from '@/api/user'
 export default {
   data () {
     return {
-      active: 0
+      active: 0,
+      channels: []
     }
+  },
+  methods: {
+    async getUserChannels () {
+      let res = await getChannels()
+      this.channels = res.data.data.channels
+    }
+  },
+  created () {
+    this.getUserChannels()
   }
 }
 </script>

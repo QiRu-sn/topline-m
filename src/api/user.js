@@ -21,3 +21,5 @@ export const login = data => creatAPI('/app/v1_0/authorizations', 'POST', data)
 export const code = data => creatAPI(`/app/v1_0/sms/codes/${data}`, 'GET')
 // 获取用户自己信息
 export const getuserInfo = data => creatAPI('/app/v1_0/user', 'GET')
+// 获取用户频道列表
+export const getChannels = data => creatAPI('/app/v1_0/user/channels', 'GET')
