@@ -16,7 +16,8 @@ import {
   Dialog,
   Search,
   Tab,
-  Tabs
+  Tabs,
+  List
 } from 'vant'
 Vue.use(Icon)
   .use(Button)
@@ -35,3 +36,4 @@ Vue.use(Icon)
   .use(Search)
   .use(Tab)
   .use(Tabs)
+  .use(List)
