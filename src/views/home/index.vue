@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="home-container">
     <!-- 导航标题栏 -->
-    <van-nav-bar title="首页" />
+    <van-nav-bar title="首页"/>
     <!-- /导航标题栏 -->
     <!-- 频道列表 -->
     <van-tabs v-model="active">
       <van-tab :title="item.name" v-for="item in channels" :key="item.id">
-        <articleList :channel='item'/>
+        <articleList :channel="item"/>
       </van-tab>
     </van-tabs>
     <!-- /频道列表 -->
@@ -40,4 +40,8 @@ export default {
 </script>
 
 <style lang='less' scoped>
+.home-container {
+  // padding-top: 90px;
+  padding-bottom: 50px;
+}
 </style>
