@@ -1,15 +1,7 @@
 <template>
   <div>
-    <!-- 未登录 -->
-    <div class="noLogin">
-      <div class="avator"></div>
-      <div class="clickLogin">
-        <span>点击登录</span>
-      </div>
-    </div>
-    <!-- /未登录 -->
     <!-- 已登录状态 -->
-    <div class="user-info-wrap">
+    <div class="user-info-wrap" v-if="$store.state.user">
       <div class="base-info-wrap">
         <div class="avatar-title-wrap">
           <van-image class="avatar" round fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg" />
@@ -37,6 +29,14 @@
       </van-grid>
     </div>
     <!-- /已登录状态 -->
+    <!-- 未登录 -->
+    <div class="noLogin" v-else>
+      <div class="avator"></div>
+      <div class="clickLogin">
+        <span>点击登录</span>
+      </div>
+    </div>
+    <!-- /未登录 -->
 
     <van-grid clickable :column-num="3">
       <van-grid-item text="我的收藏">
@@ -55,7 +55,7 @@
       <van-cell title="小智同学" is-link />
     </van-cell-group>
 
-    <van-cell-group>
+    <van-cell-group v-if="$store.state.user">
       <van-cell
         style="text-align: center;"
         title="退出登录"
