@@ -14,23 +14,47 @@
     <van-cell title="推荐频道" :border="false" />
     <van-grid :gutter="10">
       <van-grid-item
-        v-for="value in 8"
-        :key="value"
-        text="文字"
+        v-for="value in remainChannels"
+        :key="value.id"
+        :text="value.name"
       />
     </van-grid>
   </div>
 </template>
 
 <script>
+import { getAllChannels } from '@/api/channels'
 export default {
+  name: 'channel',
   props: ['channels'],
   data () {
     return {
-      show: false
+      show: false,
+      allChannels: []
     }
   },
   methods: {
+    //  获取全部频道列表
+    async getAllChannels () {
+      const { data } = await getAllChannels()
+      this.allChannels = data.data.channels
+    }
+  },
+  created () {
+    this.getAllChannels()
+  },
+  computed: {
+    //   剩余频道=所有频道-我的频道
+    remainChannels () {
+      const { channels, allChannels } = this
+      const reChannels = []
+      allChannels.forEach(item => {
+        if (!channels.find(channel => channel.id === item.id)) {
+          reChannels.push(item)
+        }
+      })
+      return reChannels
+    }
   }
 }
 </script>
