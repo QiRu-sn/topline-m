@@ -36,6 +36,7 @@
 import { getChannels } from '@/api/user'
 import articleList from './components/articles_list'
 import channelsList from './components/channels_list'
+import { getItem } from '@/utils/storage'
 export default {
   components: {
     articleList,
@@ -51,8 +52,16 @@ export default {
   methods: {
     // 获取用户频道列表
     async getUserChannels () {
-      let res = await getChannels()
-      this.channels = res.data.data.channels
+      // 判断本地存储是否有数据，如果有则使用本地存储的，没有则调用接口
+      let channels = []
+      const loadChannels = getItem('userChannels')
+      if (loadChannels) {
+        channels = loadChannels
+      } else {
+        let res = await getChannels()
+        channels = res.data.data.channels
+      }
+      this.channels = channels
     }
   },
   created () {

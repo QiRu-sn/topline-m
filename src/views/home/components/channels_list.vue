@@ -29,6 +29,7 @@
 
 <script>
 import { getAllChannels } from '@/api/channels'
+import { setItem } from '@/utils/storage'
 export default {
   props: ['channels'],
   data () {
@@ -60,6 +61,7 @@ export default {
         this.$emit('closeDialog')
       }
     }
+    // 加载用户本地存储频道数据
   },
   created () {
     this.getAllChannels()
@@ -75,6 +77,12 @@ export default {
         }
       })
       return reChannels
+    }
+  },
+  watch: {
+    channels () {
+      // 设置数据持久化，存入本地存储
+      setItem('userChannels', this.channels)
     }
   }
 }
