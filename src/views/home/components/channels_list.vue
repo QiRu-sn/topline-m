@@ -6,11 +6,12 @@
 
     <van-grid :gutter="10">
       <van-grid-item
-        v-for="value in channels"
+        v-for="(value,index) in channels"
         :key="value.id"
         :text="value.name"
+        @click="toggleChannels(value,index)"
       >
-      <van-icon v-show="isEditShow"  class="close-icon"  slot="icon"  name="close" size="20"  />
+      <van-icon v-show="isEditShow&& index!==0"  class="close-icon"  slot="icon"  name="close" size="20"  />
       </van-grid-item>
     </van-grid>
     <van-cell title="推荐频道" :border="false" />
@@ -46,6 +47,18 @@ export default {
     // 从推荐列表添加至我的列表
     addChannels (channel) {
       this.channels.push(channel)
+    },
+    toggleChannels (channels, index) {
+      // 如果isEditShow为true，说明是删除
+      if (this.isEditShow && index !== 0) {
+        this.channels.splice(index, 1)
+      } else {
+        // 否则为跳转至频道列表
+        // 将index传给父组件
+        this.$emit('input', index)
+        // 通知父组件关闭弹层
+        this.$emit('closeDialog')
+      }
     }
   },
   created () {

@@ -23,7 +23,10 @@
       closeable
       close-icon-position="top-left"
       :style="{ height: '93%' }" >
-      <channelsList :channels='channels'/>
+      <channelsList
+      :channels='channels'
+      @closeDialog="show=false"
+      v-model="active" />
     </van-popup>
     <!-- /弹出频道列表 -->
   </div>
