@@ -8,9 +8,13 @@
       <van-grid-item
         v-for="(value,index) in channels"
         :key="value.id"
-        :text="value.name"
         @click="toggleChannels(value,index)"
       >
+      <span
+          slot="text"
+          class="text"
+          :class="{ active: valueChannel === index }"
+        >{{ value.name}}</span>
       <van-icon v-show="isEditShow&& index!==0"  class="close-icon"  slot="icon"  name="close" size="20"  />
       </van-grid-item>
     </van-grid>
@@ -31,7 +35,7 @@
 import { getAllChannels } from '@/api/channels'
 import { setItem } from '@/utils/storage'
 export default {
-  props: ['channels'],
+  props: ['channels', 'valueChannel'],
   data () {
     return {
       show: false,
@@ -93,8 +97,14 @@ export default {
   padding: 40px 0;
 }
 ::v-deep .van-grid-item__icon-wrapper {
-    position: absolute;
-    top: -15px;
-    right: -10px;
+  position: absolute;
+  top: -15px;
+  right: -10px;
+}
+.text {
+    font-size: 14px;
   }
+.active{
+    color:red
+}
 </style>

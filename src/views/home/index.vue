@@ -25,6 +25,7 @@
       :style="{ height: '93%' }" >
       <channelsList
       :channels='channels'
+      :valueChannel='active'
       @closeDialog="show=false"
       v-model="active" />
     </van-popup>
