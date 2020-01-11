@@ -6,12 +6,11 @@
 
     <van-grid :gutter="10">
       <van-grid-item
-        v-for="value in 8"
-        :key="value"
-        text="文字"
+        v-for="value in channels"
+        :key="value.id"
+        :text="value.name"
       />
     </van-grid>
-
     <van-cell title="推荐频道" :border="false" />
     <van-grid :gutter="10">
       <van-grid-item
@@ -25,6 +24,7 @@
 
 <script>
 export default {
+  props: ['channels'],
   data () {
     return {
       show: false

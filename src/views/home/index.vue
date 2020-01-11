@@ -15,6 +15,7 @@
       </van-tab>
     </van-tabs>
     <!-- /频道列表 -->
+    <!-- 弹出频道列表 -->
     <van-popup
       v-model="show"
       round
@@ -22,8 +23,9 @@
       closeable
       close-icon-position="top-left"
       :style="{ height: '93%' }" >
-      <channelsList/>
+      <channelsList :channels='channels'/>
     </van-popup>
+    <!-- /弹出频道列表 -->
   </div>
 </template>
 
