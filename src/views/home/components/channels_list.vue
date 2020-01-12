@@ -6,25 +6,25 @@
 
     <van-grid :gutter="10">
       <van-grid-item
-        v-for="(value,index) in channels"
-        :key="value.id"
-        @click="toggleChannels(value,index)"
+        v-for="(item,index) in channels"
+        :key="item.id"
+        @click="toggleChannels(item,index)"
       >
       <span
           slot="text"
           class="text"
-          :class="{ active: valueChannel === index }"
-        >{{ value.name}}</span>
+          :class="{ active: value === index }"
+        >{{ item.name}}</span>
       <van-icon v-show="isEditShow&& index!==0"  class="close-icon"  slot="icon"  name="close" size="20"  />
       </van-grid-item>
     </van-grid>
     <van-cell title="推荐频道" :border="false" />
     <van-grid :gutter="10">
       <van-grid-item
-        v-for="value in remainChannels"
-        :key="value.id"
-        :text="value.name"
-        @click="addChannels(value)"
+        v-for="item in remainChannels"
+        :key="item.id"
+        :text="item.name"
+        @click="addChannels(item)"
       >
       </van-grid-item>
     </van-grid>
@@ -35,7 +35,7 @@
 import { getAllChannels } from '@/api/channels'
 import { setItem } from '@/utils/storage'
 export default {
-  props: ['channels', 'valueChannel'],
+  props: ['channels', 'value'],
   data () {
     return {
       show: false,

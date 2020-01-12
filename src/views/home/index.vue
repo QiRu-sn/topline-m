@@ -1,17 +1,23 @@
 <template>
   <div class="home-container">
     <!-- 导航标题栏 -->
-    <van-nav-bar title="首页" fixed/>
+    <van-nav-bar fixed>
+      <div slot="left" class="logo_area"></div>
+      <van-button
+        class="search-button"
+        slot="right"
+        round
+        type="info"
+        size="mini"
+        @click="$router.push('/search')"
+      >搜索</van-button>
+    </van-nav-bar>
     <!-- /导航标题栏 -->
     <!-- 频道列表 -->
-    <van-tabs v-model="active" >
-      <van-icon
-        name="wap-nav"
-        slot="nav-right"
-        @click="show=true"
-        />
+    <van-tabs v-model="active">
+      <van-icon name="wap-nav" slot="nav-right" @click="show=true" />
       <van-tab :title="item.name" v-for="item in channels" :key="item.id">
-        <articleList :channel="item"/>
+        <articleList :channel="item" />
       </van-tab>
     </van-tabs>
     <!-- /频道列表 -->
@@ -22,14 +28,12 @@
       position="bottom"
       closeable
       close-icon-position="top-left"
-      :style="{ height: '93%' }" >
-      <channelsList
-      :channels='channels'
-      :valueChannel='active'
-      @closeDialog="show=false"
-      v-model="active" />
+      :style="{ height: '93%' }"
+    >
+      <channelsList :channels="channels" @closeDialog="show=false" v-model="active" />
     </van-popup>
-    <!-- /弹出频道列表 -->
+    <!-- /弹出频道列表
+    :valueChannel='active'-->
   </div>
 </template>
 
@@ -77,15 +81,27 @@ export default {
   padding-bottom: 50px;
 }
 ::v-deep .van-tabs__wrap {
-    position: fixed;
-    width:100%;
-    top: 46px;
-    z-index: 1;
-  }
-.van-icon-wap-nav{
   position: fixed;
-  right:0;
-  line-height:46px;
+  width: 100%;
+  top: 46px;
+  z-index: 1;
+}
+.van-icon-wap-nav {
+  position: fixed;
+  right: 0;
+  line-height: 46px;
   background: #fff;
+}
+.logo_area{
+  width:100px;
+  height: 30px;
+  background: url('./logo-light.png') no-repeat;
+  background-size: 100px;
+  margin-top: -40px;
+}
+.search-button {
+  width: 173px;
+  height: 30px;
+  background-color: #5babfb;
 }
 </style>
