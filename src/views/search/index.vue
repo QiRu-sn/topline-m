@@ -14,11 +14,11 @@
     </van-search>
     <!-- /搜索框 -->
     <!-- 搜索结果 -->
-    <ArticleList v-if="isResultsShow"/>
+    <ArticleList v-if="isResultsShow" :searchText="searchText"/>
     <!-- /搜索结果 -->
     <!-- 联想建议 -->
     <van-cell-group v-else-if="searchText">
-      <van-cell v-for="(item,index) in suggestionList" :key="index"  icon="search" >
+      <van-cell v-for="(item,index) in suggestionList" :key="index"  icon="search" @click='searchText=item' >
         <div slot="title" v-html="highLight(item)"></div>
       </van-cell>
     </van-cell-group>
@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     async onSearch () {
-      console.log('onsearch')
+      this.isResultsShow = true
     },
     onCancel () {
       console.log('onCancel')
