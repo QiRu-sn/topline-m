@@ -45,6 +45,7 @@
 import { getSuggestions } from '@/api/search'
 import ArticleList from './component/articleList'
 import { setItem, getItem } from '@/utils/storage'
+import { dobounce } from 'lodash'
 export default {
   components: {
     ArticleList
@@ -72,7 +73,8 @@ export default {
       console.log('onCancel')
     },
     // 获取联想建议内容
-    async OnsearchInput () {
+    // 函数防抖
+    OnsearchInput: dobounce(async function () {
       const suggestionText = this.searchText.trim()
       if (!suggestionText) {
         this.isDelShow = false
@@ -80,7 +82,7 @@ export default {
       }
       const { data } = await getSuggestions({ q: suggestionText })
       this.suggestionList = data.data.options
-    },
+    }, 200),
     // 搜索关键字高亮
     highLight (str) {
       return str.toLowerCase().replace(this.searchText.toLowerCase(), `<span style="color:red">${this.searchText}</span>`)
