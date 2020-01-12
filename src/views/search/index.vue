@@ -27,12 +27,14 @@
     <!-- 搜索记录 -->
     <van-cell-group v-else>
       <van-cell title="历史记录">
-        <span>全部删除</span>&nbsp;&nbsp;&nbsp;
-        <span>完成</span>&nbsp;&nbsp;&nbsp;
-        <van-icon name="delete" />
+        <van-icon name="delete" v-if="!isDelShow" @click="isDelShow=true"/>
+        <template v-else>
+        <span @click="historyList=[]">全部删除</span>&nbsp;&nbsp;&nbsp;
+        <span @click="isDelShow=false">完成</span>&nbsp;&nbsp;&nbsp;
+        </template>
       </van-cell>
-      <van-cell v-for="(item,index) in historyList" :key="index" :title="item">
-        <van-icon name="close" />
+      <van-cell v-for="(item,index) in historyList" :key="index" :title="item" @click="onSearch(item)">
+        <van-icon name="close" v-show="isDelShow"  @click="historyList.splice(index,1)"/>
       </van-cell>
     </van-cell-group>
     <!-- /搜索记录 -->
@@ -52,7 +54,8 @@ export default {
       searchText: '',
       suggestionList: [],
       historyList: getItem('user-histories') || [],
-      isResultsShow: false
+      isResultsShow: false,
+      isDelShow: false
     }
   },
   methods: {
@@ -72,6 +75,7 @@ export default {
     async OnsearchInput () {
       const suggestionText = this.searchText.trim()
       if (!suggestionText) {
+        this.isDelShow = false
         return
       }
       const { data } = await getSuggestions({ q: suggestionText })
