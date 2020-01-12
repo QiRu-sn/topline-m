@@ -9,6 +9,7 @@
       @input="OnsearchInput"
       @search="onSearch"
       @cancel="onCancel"
+      @focus="isResultsShow=false"
     >
       <div slot="action" @click="$router.back()">取消</div>
     </van-search>
@@ -18,7 +19,7 @@
     <!-- /搜索结果 -->
     <!-- 联想建议 -->
     <van-cell-group v-else-if="searchText">
-      <van-cell v-for="(item,index) in suggestionList" :key="index"  icon="search" @click='searchText=item' >
+      <van-cell v-for="(item,index) in suggestionList" :key="index"  icon="search" @click='onSearch(item)' >
         <div slot="title" v-html="highLight(item)"></div>
       </van-cell>
     </van-cell-group>
@@ -41,6 +42,7 @@
 <script>
 import { getSuggestions } from '@/api/search'
 import ArticleList from './component/articleList'
+import { setItem, getItem } from '@/utils/storage'
 export default {
   components: {
     ArticleList
@@ -49,12 +51,18 @@ export default {
     return {
       searchText: '',
       suggestionList: [],
-      historyList: [],
+      historyList: getItem('user-histories') || [],
       isResultsShow: false
     }
   },
   methods: {
-    async onSearch () {
+    async onSearch (value) {
+      this.searchText = value
+      const index = this.historyList.indexOf(this.searchText)
+      if (index !== -1) {
+        this.historyList.splice(index, 1)
+      }
+      this.historyList.unshift(this.searchText)
       this.isResultsShow = true
     },
     onCancel () {
@@ -72,6 +80,11 @@ export default {
     // 搜索关键字高亮
     highLight (str) {
       return str.toLowerCase().replace(this.searchText.toLowerCase(), `<span style="color:red">${this.searchText}</span>`)
+    }
+  },
+  watch: {
+    historyList () {
+      setItem('user-histories', this.historyList)
     }
   },
   created () {}
