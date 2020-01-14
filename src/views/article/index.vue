@@ -53,8 +53,9 @@
         info="9"
       />
       <van-icon
+        @click="onCollect"
         color="orange"
-        name="star"
+        :name="article.is_collected?'star':'star-o'"
       />
       <van-icon
         color="#e5645f"
@@ -68,7 +69,7 @@
 
 <script>
 import './github-markdown.css'
-import { getArticleDetails } from '@/api/articles'
+import { getArticleDetails, removeCollected, addCollected } from '@/api/articles'
 export default {
   data () {
     return {
@@ -84,11 +85,36 @@ export default {
         const { data } = await getArticleDetails({
           article_id: this.$route.params.articleID
         })
+        console.log(data.data)
         this.article = data.data
       } catch (error) {
         console.log(error)
       }
       this.loading = false
+    },
+    // 收藏和取消收藏
+    async onCollect () {
+      this.$toast.loading({
+        duration: 0, // 持续展示 toast
+        message: '操作中...',
+        forbidClick: true // 是否禁止背景点击
+      })
+      if (this.article.is_collected) {
+        // 取消收藏
+        await removeCollected({
+          target: this.$route.params.articleID
+        })
+        this.$toast.success('取消收藏')
+      } else {
+        // 添加收藏
+        let res = await addCollected({
+          target: this.$route.params.articleID
+        })
+        console.log(res)
+        this.$toast.success('收藏成功')
+      }
+
+      this.article.is_collected = !this.article.is_collected
     }
   },
   created () {

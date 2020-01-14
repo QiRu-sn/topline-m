@@ -1,4 +1,10 @@
 import { creatAPI } from '../utils/request'
 
+// 获取文章列表
 export const getArticles = data => creatAPI('/app/v1_1/articles', 'GET', data)
+// 获取文章详情
 export const getArticleDetails = data => creatAPI(`/app/v1_0/articles/${data.article_id}`, 'GET', data)
+// 取消收藏
+export const removeCollected = data => creatAPI(`/app/v1_0/article/collections/${data.target}`, 'DELETE', data)
+// 添加收藏
+export const addCollected = data => creatAPI('/app/v1_0/article/collections', 'POST', data)
