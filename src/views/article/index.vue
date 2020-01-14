@@ -21,7 +21,13 @@
             <p class="time">{{article.pubdate}}</p>
           </div>
         </div>
-        <van-button class="follow-btn" type="info" size="small" round>+ 关注</van-button>
+        <van-button
+          @click="onFollowed"
+          class="follow-btn"
+          :type="article.is_followed?'default':'info'"
+          size="small"
+          round
+        >{{article.is_followed?'已关注':'+ 关注'}}</van-button>
       </div>
       <div class="markdown-body" v-html="article.content"></div>
     </div>
@@ -29,34 +35,16 @@
 
     <!-- 加载失败提示 -->
     <div class="error" v-else>
-      <img src="./no-network.png" alt="no-network">
+      <img src="./no-network.png" alt="no-network" />
       <p class="text">亲，网络不给力哦~</p>
-      <van-button
-        class="btn"
-        type="default"
-        size="small"
-        @click="getArticles"
-      >点击重试</van-button>
+      <van-button class="btn" type="default" size="small" @click="getArticles">点击重试</van-button>
     </div>
     <!-- /加载失败提示 -->
     <!-- 底部区域 -->
     <div class="footer">
-      <van-button
-        class="write-btn"
-        type="default"
-        round
-        size="small"
-      >写评论</van-button>
-      <van-icon
-        class="comment-icon"
-        name="comment-o"
-        info="9"
-      />
-      <van-icon
-        @click="onCollect"
-        color="orange"
-        :name="article.is_collected?'star':'star-o'"
-      />
+      <van-button class="write-btn" type="default" round size="small">写评论</van-button>
+      <van-icon class="comment-icon" name="comment-o" info="9" />
+      <van-icon @click="onCollect" color="orange" :name="article.is_collected?'star':'star-o'" />
       <van-icon
         @click="onAttitude"
         color="#e5645f"
@@ -70,7 +58,15 @@
 
 <script>
 import './github-markdown.css'
-import { getArticleDetails, removeCollected, addCollected, removeAttitude, addAttitude } from '@/api/articles'
+import {
+  getArticleDetails,
+  removeCollected,
+  addCollected,
+  removeAttitude,
+  addAttitude,
+  removeFollowed,
+  addFollowed
+} from '@/api/articles'
 export default {
   data () {
     return {
@@ -86,7 +82,6 @@ export default {
         const { data } = await getArticleDetails({
           article_id: this.$route.params.articleID
         })
-        console.log(data.data)
         this.article = data.data
       } catch (error) {
         console.log(error)
@@ -137,6 +132,23 @@ export default {
         this.article.attitude = 1
         this.$toast.success('点赞成功')
       }
+    },
+    // 关注或取消关注
+    async onFollowed () {
+      if (this.article.is_followed) {
+        // 取消关注
+        await removeFollowed({
+          target: this.$route.params.articleID
+        })
+        this.$toast.success('取消关注成功')
+      } else {
+        // 添加关注
+        await addFollowed({
+          target: this.article.aut_id
+        })
+        this.$toast.success('已关注')
+      }
+      this.article.is_followed = !this.article.is_followed
     }
   },
   created () {
@@ -157,7 +169,7 @@ export default {
       margin: 0;
       padding-top: 24px;
       font-size: 20px;
-      color: #3A3A3A;
+      color: #3a3a3a;
     }
     .author-wrap {
       display: flex;

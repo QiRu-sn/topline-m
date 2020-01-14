@@ -12,3 +12,7 @@ export const addCollected = data => creatAPI('/app/v1_0/article/collections', 'P
 export const removeAttitude = data => creatAPI(`/app/v1_0/article/likings/${data.target}`, 'DELETE', data)
 // 添加点赞
 export const addAttitude = data => creatAPI('/app/v1_0/article/likings', 'POST', data)
+// 取消关注
+export const removeFollowed = data => creatAPI(`/app/v1_0/user/followings/${data.target}`, 'DELETE', data)
+// 添加关注
+export const addFollowed = data => creatAPI('/app/v1_0/user/followings', 'POST', data)
