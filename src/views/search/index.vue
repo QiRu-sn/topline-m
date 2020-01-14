@@ -6,7 +6,7 @@
       placeholder="请输入搜索关键词"
       show-action
       shape="round"
-      @input="OnsearchInput"
+      @input="OnSearchInput"
       @search="onSearch"
       @cancel="onCancel"
       @focus="isResultsShow=false"
@@ -45,7 +45,7 @@
 import { getSuggestions } from '@/api/search'
 import ArticleList from './component/articleList'
 import { setItem, getItem } from '@/utils/storage'
-import { dobounce } from 'lodash'
+import { debounce } from 'lodash'
 export default {
   components: {
     ArticleList
@@ -74,7 +74,7 @@ export default {
     },
     // 获取联想建议内容
     // 函数防抖
-    OnsearchInput: dobounce(async function () {
+    OnSearchInput: debounce(async function () {
       const suggestionText = this.searchText.trim()
       if (!suggestionText) {
         this.isDelShow = false

@@ -2,7 +2,7 @@
   <div>
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-        <van-cell v-for="(item,index) in list" :key="index" :title="item.title" />
+        <van-cell v-for="(item,index) in list" :key="index" :title="item.title" @click="$router.push(`/article/${item.art_id}`)" />
       </van-list>
     </van-pull-refresh>
   </div>
@@ -31,7 +31,6 @@ export default {
       })
       //  2、将获取的数据添加到数组列表中
       const results = res.data.data.results
-
       this.list.push(...results)
       //  3、加载状态结束
       this.loading = false
