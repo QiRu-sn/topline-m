@@ -8,3 +8,7 @@ export const getArticleDetails = data => creatAPI(`/app/v1_0/articles/${data.art
 export const removeCollected = data => creatAPI(`/app/v1_0/article/collections/${data.target}`, 'DELETE', data)
 // 添加收藏
 export const addCollected = data => creatAPI('/app/v1_0/article/collections', 'POST', data)
+// 取消点赞
+export const removeAttitude = data => creatAPI(`/app/v1_0/article/likings/${data.target}`, 'DELETE', data)
+// 添加点赞
+export const addAttitude = data => creatAPI('/app/v1_0/article/likings', 'POST', data)

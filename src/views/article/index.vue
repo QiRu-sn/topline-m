@@ -58,8 +58,9 @@
         :name="article.is_collected?'star':'star-o'"
       />
       <van-icon
+        @click="onAttitude"
         color="#e5645f"
-        name="good-job"
+        :name="article.attitude===1?'good-job':'good-job-o'"
       />
       <van-icon class="share-icon" name="share" />
     </div>
@@ -69,7 +70,7 @@
 
 <script>
 import './github-markdown.css'
-import { getArticleDetails, removeCollected, addCollected } from '@/api/articles'
+import { getArticleDetails, removeCollected, addCollected, removeAttitude, addAttitude } from '@/api/articles'
 export default {
   data () {
     return {
@@ -107,14 +108,35 @@ export default {
         this.$toast.success('取消收藏')
       } else {
         // 添加收藏
-        let res = await addCollected({
+        await addCollected({
           target: this.$route.params.articleID
         })
-        console.log(res)
         this.$toast.success('收藏成功')
       }
-
       this.article.is_collected = !this.article.is_collected
+    },
+    // 点赞或取消点赞
+    async onAttitude () {
+      this.$toast.loading({
+        duration: 0, // 持续展示 toast
+        message: '操作中...',
+        forbidClick: true // 是否禁止背景点击
+      })
+      if (this.article.attitude === 1) {
+        // 取消点赞
+        await removeAttitude({
+          target: this.$route.params.articleID
+        })
+        this.article.attitude = -1
+        this.$toast.success('取消成功')
+      } else {
+        // 添加点赞
+        await addAttitude({
+          target: this.$route.params.articleID
+        })
+        this.article.attitude = 1
+        this.$toast.success('点赞成功')
+      }
     }
   },
   created () {
