@@ -22,6 +22,7 @@
           </div>
         </div>
         <van-button
+          v-if="!$store.state.user || article.aut_id !== $store.state.user.id"
           @click="onFollowed"
           class="follow-btn"
           :type="article.is_followed?'default':'info'"
@@ -138,7 +139,7 @@ export default {
       if (this.article.is_followed) {
         // 取消关注
         await removeFollowed({
-          target: this.$route.params.articleID
+          target: this.article.aut_id
         })
         this.$toast.success('取消关注成功')
       } else {
