@@ -20,7 +20,8 @@ import {
   List,
   PullRefresh,
   Popup,
-  Loading
+  Loading,
+  Divider
 } from 'vant'
 Vue.use(Icon)
   .use(Button)
@@ -43,3 +44,4 @@ Vue.use(Icon)
   .use(PullRefresh)
   .use(Popup)
   .use(Loading)
+  .use(Divider)

@@ -16,3 +16,5 @@ export const addAttitude = data => creatAPI('/app/v1_0/article/likings', 'POST',
 export const removeFollowed = data => creatAPI(`/app/v1_0/user/followings/${data.target}`, 'DELETE', data)
 // 添加关注
 export const addFollowed = data => creatAPI('/app/v1_0/user/followings', 'POST', data)
+// 获取文章评论
+export const getArticleComment = data => creatAPI('/app/v1_0/comments', 'GET', data)

@@ -40,11 +40,13 @@
       <p class="text">亲，网络不给力哦~</p>
       <van-button class="btn" type="default" size="small" @click="getArticles">点击重试</van-button>
     </div>
+    <van-divider>正文结束 </van-divider>
+    <ArticleComment :articleId='$route.params.articleID'/>
     <!-- /加载失败提示 -->
     <!-- 底部区域 -->
     <div class="footer">
-      <van-button class="write-btn" type="default" round size="small">写评论</van-button>
-      <van-icon class="comment-icon" name="comment-o" info="9" />
+      <van-button class="write-btn" type="default" round size="small" @click="isCommentShow=true">写评论</van-button>
+      <van-icon class="comment-icon" name="comment-o" info="10" />
       <van-icon @click="onCollect" color="orange" :name="article.is_collected?'star':'star-o'" />
       <van-icon
         @click="onAttitude"
@@ -54,11 +56,31 @@
       <van-icon class="share-icon" name="share" />
     </div>
     <!-- /底部区域 -->
+    <!-- 发布评论 -->
+    <van-popup
+      v-model="isCommentShow"
+      position="bottom"
+    >
+    <div class="post-comment">
+      <van-field
+        v-model="message"
+        rows="2"
+        autosize
+        type="textarea"
+        maxlength="50"
+        placeholder="请输入留言"
+        show-word-limit
+      />
+      <van-button type="primary" size="small">发布</van-button>
+    </div>
+    </van-popup>
+    <!-- /发布评论 -->
   </div>
 </template>
 
 <script>
 import './github-markdown.css'
+import ArticleComment from './components/article_comment'
 import {
   getArticleDetails,
   removeCollected,
@@ -69,10 +91,15 @@ import {
   addFollowed
 } from '@/api/articles'
 export default {
+  components: {
+    ArticleComment
+  },
   data () {
     return {
       article: {},
-      loading: true
+      loading: true,
+      isCommentShow: false,
+      message: ''
     }
   },
   methods: {
@@ -238,6 +265,15 @@ export default {
     .share-icon {
       bottom: -2px;
     }
+  }
+  .post-comment{
+    display: flex;
+    padding: 10px;
+    align-items: flex-end;
+  }
+  .van-cell{
+    background-color: #ececec;
+    margin-right: 10px;
   }
 }
 </style>
